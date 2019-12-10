@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cat1"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:id="@+id/imageView"/>
+        <!--  android:scaleType="fitCenter"
+         android:adjustViewBounds="true"
+         이미지가 사이즈가 맞지 않을때 이미지를 화면에 맞게 사이즈를
+         조정해준다. -->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgBtn"
+        android:text="이미지를 변경해요!!!"/>
+
+</LinearLayout>

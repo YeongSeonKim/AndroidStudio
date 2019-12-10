@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">AndroidSample</string>
+
+    <string name="button1">LinearLayout Example</string>
+    <string name="button2">Chatting Activity Example</string>
+    <string name="button3">Image 처리 Activity Example</string>
+    <string name="button4">Touch Event, Toast Example</string>
+    <string name="button5">Activity Swipe 감지</string>
+    <string name="button6">Activity에 Message 전달</string>
+    <string name="button7">다른 Activity로부터 Data 전달받기</string>
+    <string name="button8">ANR(Application Not Responding)</string>
+    <string name="button9">Counter App(실행에러)</string>
+    <string name="button10">Counter App(Handler)</string>
+    <string name="button11">도서검색 및 출력</string>
+    <string name="button12">영화정보 출력 및 세부정보 창 띄우기</string>
+    <string name="button13">도서검색(CUSTOM)</string>
+    <string name="button14">Implicit Intent(묵시적 인텐트)</string>
+    <string name="button15">Service 시작</string>
+    <string name="button16">Service 중지</string>
+    <string name="button17">카카오 도서검색 및 출력</string>
+    <string name="button18">Broadcast Message Send!!! 정적</string>
+    <string name="button19">Notification 실행</string>
+    <string name="button20">Broadcast Message Send 동적</string>
+    <string name="button21">SQLite SAMPLE ACTIVITY</string>
+    <string name="button22">주소록</string>
+    <string name="button23"></string>
+    <string name="button24"></string>
+    <string name="button25"></string>
+
+
+    <string name="B1">BUTTON1</string>
+    <string name="B2">BUTTON2</string>
+    <string name="B3">BUTTON3</string>
+    <string name="B4">BUTTON4</string>
+
+    <string name="T1">TextView 1</string>
+    <string name="T2">TextView 2</string>
+    <string name="T3">TextView 3</string>
+    <string name="T4">TextView 4</string>
+
+    <string name="toastMsg">Activity Touch!!!</string>
+
+</resources>
