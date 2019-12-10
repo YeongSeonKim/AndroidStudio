@@ -110,6 +110,8 @@
 
 Final을 붙여 상수화시켜 메모리에 계속 남겨서 사용한다.
 
+**activity_chatting.xml**
+
 ![image-20191210183049586](assets/image-20191210183049586.png)
 
 실행결과
@@ -126,6 +128,8 @@ Final을 붙여 상수화시켜 메모리에 계속 남겨서 사용한다.
 
 변경 할 이미지는 java에서 선언해준다.
 
+**activity_image.xml**
+
 ![image-20191210183127477](assets/image-20191210183127477.png)
 
 실행결과 - 버튼 클릭하면 이미지 변경됨!
@@ -136,7 +140,11 @@ Final을 붙여 상수화시켜 메모리에 계속 남겨서 사용한다.
 
 **Touch Event & Toast Example**
 
+**TouchActivity.java**
+
 ![image-20191210183159687](assets/image-20191210183159687.png)
+
+**activity_touch.xml**
 
 ![image-20191210183203038](assets/image-20191210183203038.png)
 

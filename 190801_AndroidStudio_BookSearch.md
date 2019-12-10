@@ -2,7 +2,9 @@
 
 # AndroidStudio
 
-## Android_BookSearch
+## 실습해보기 - 도서제목검색 및 출력
+
+### Android_BookSearch
 
 1. MySQL Database Setting ( 도서정보 )
 
@@ -156,7 +158,7 @@
 
    => 출력 : 책 제목 리스트 ( JSON ) - arraylist
 
-이클립스 BookSearch_Workspace 프로젝트 생성 
+**이클립스** BookSearch_Workspace 프로젝트 생성 
 
 ![image-20191210185409338](assets/image-20191210185409338.png)
 
@@ -216,9 +218,292 @@
 
 get방식으로 사용할 꺼임
 
+
+
+**BookSearchTitleServlet.java**
+
+```java
+package com.test.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.test.service.BookService;
+
+
+@WebServlet("/searchTitle")
+public class BookSearchTitleServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    
+    public BookSearchTitleServlet() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 입력받고 
+		String keyword = request.getParameter("USER_KEYWORD"); 
+		//String keyword = request.getParameter("keyword");
+		// 로직처리를 Service에게 위임
+		// Service를 생성해서 Service에게 일을 시킨 후 결과를 받아와요!!  
+		// 객체만들어주기
+		BookService service = new BookService(); 
+		// 서비스가 가지고 있는 메서드 호출
+		List<String> list = service.getBooksTitle(keyword); //키워드를 줘야함, 메서드 이름은 transaction으로 잡아줘야함
+		// String 이 아닌 list로 받는다
+		
+		// 출력처리(JSON)
+		response.setContentType("text/plain; charset=UTF8");
+		PrintWriter out = response.getWriter();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(list);
+		
+		out.print(json);
+		//out.print("list에 JSON 문자열을 보내요!!!");
+		// JSON 간단하게 만드는거 JACKSON Library 사용
+		out.flush();
+		out.close();
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}
+```
+
 ![image-20191210185820456](assets/image-20191210185820456.png)
 
+**BookService.java**
+
+```java
+package com.test.service;
+
+import java.sql.Connection;
+import java.util.List;
+import com.test.dao.BookDAO;
+import com.test.dto.BookVO;
+
+// Service 객체를 만들기 위한 class
+public class BookService {
+
+	// Business Logic(Transaction)에 대한 method만 나와요!
+	// 하나의 Transaction(기능)당 1개의 method가 이용.
+	public List<String> getBooksTitle(String keyword) {
+		/*
+		 * // 로직처리(더하기, 뺴기, for, if, etc...) // 로직처리 코드가 많이 나와요!!! // Database 처리가 나와야
+		 * 해요!! // DAO를 만들어서 database처리를 한 후 결과를 가져와요!! BookDAO dao = new BookDAO(); //
+		 * CRUD를 다루는 List<String> list = dao.selectTitle(keyword); return list;
+		 */
+		Connection con = null;
+		List<String> list = null;
+		try {
+			con = common.DBTemplate.getConnection();
+			// con 객페에 대한 transaction이 시작
+			BookDAO dao = new BookDAO(con); // 데이터베이스를 처리할때 BookDAO한데 con을 넘겨줌 => 인젝션
+			list = dao.selectTitle(keyword);
+			
+			// 얻어온 결과를 이요해서 transaction의 commit과 rollback을 판단
+			if(list != null) {
+				// transaction 이 정상적으로 처리 되었을 경우
+				con.commit();
+			}else {
+				// transaction 처리에 오류가 있는 경우
+				con.rollback();
+			}
+						
+			}catch (Exception e) {
+				System.out.println(e);
+					
+			} finally {
+				try {
+						
+				// close작업을 해줘야함 close할때도 Exception이 발생할수 있기때문에 try-catch 사용해야함
+				con.close();
+							
+			} catch (Exception e1) {
+				System.out.println(e1);
+			}
+								
+		}
+		
+		return list;
+		
+	}
+	
+	
+
+	public List<BookVO> getBooks(String keyword) {
+		// 로직처리(DB처리를 포함해서)
+		// Transaction : 작업의 최소 단위
+		// 데이터베이스 connection에대한 코드를 여기에 적어준다. 
+		// DAO가 아닌 => Transation을 처리하기위해서는 Service에서 정의해주는 게 맞다.
+		
+		Connection con = null;
+		List<BookVO> list = null;
+		
+		try {
+			con = common.DBTemplate.getConnection();
+			// con 객페에 대한 transaction이 시작
+			BookDAO dao = new BookDAO(con); // 데이터베이스를 처리할때 BookDAO한데 con을 넘겨줌 => 인젝션
+			list = dao.select(keyword);
+			
+			// 얻어온 결과를 이요해서 transaction의 commit과 rollback을 판단
+			if(list != null) {
+				// transaction 이 정상적으로 처리 되었을 경우
+				con.commit();
+			}else {
+				// transaction 처리에 오류가 있는 경우
+				con.rollback();
+			}
+			
+		}catch (Exception e) {
+			System.out.println(e);
+		
+		} finally {
+			try {
+				
+				// close작업을 해줘야함 close할때도 Exception이 발생할수 있기때문에 try-catch 사용해야함
+				con.close();
+				
+			} catch (Exception e1) {
+				System.out.println(e1);
+			}
+			
+				
+		}
+		
+		/*
+		 * // DB처리 첫번째 dao.firstMethod();
+		 * 
+		 * // DB처리 두번째 dao.secondMethod();
+		 * 
+		 * // DB처리 세번째 dao.thirdMethod();
+		 */
+		
+		return list;
+	}
+
+}
+```
+
+
+
 ![image-20191210185839931](assets/image-20191210185839931.png)
+
+**BookDAO.java**
+
+```java
+package com.test.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.test.dto.BookVO;
+
+public class BookDAO {
+	
+	// Service에서 사용해줬으니까 여기서 밑에 처럼 해줘야함
+	private Connection con;
+	
+	public BookDAO(Connection con) {
+		this.con = con;
+	}
+
+	public List<String> selectTitle(String keyword) {
+		// keyword를 입력받아서 Database를 검색해서 
+		// String[]을 만들어서 return 해주는 DB처리
+		// JDBC를 이용한 DB처리
+	
+		// 결과가 저장될 list만들기
+		List<String> list = new ArrayList<String>();
+		
+		// 오류가 발생할 수 있으니 try-catch사용
+		try {
+	
+			/*
+			 * // 1. Driver Loading // MySQL을 위한 JDBC Driver class를 로딩
+			 * Class.forName("com.mysql.jdbc.Driver"); System.out.println("로딩 성공!!"); // 2.
+			 * Connection 단계 String id = "android"; String pw = "android"; String jdbcUrl =
+			 * "jdbc:mysql://localhost:3306/library?characterEncoding=UTF8"; // 상당히 로드가 많이
+			 * 걸리는 작업 // Connection pool 을 사용하는 코드로 재작성 // -> 미리 conn을 만들어 놓고 필요할 때 마다 가져다
+			 * 쓴다. // Apache Tomcat DBCP라는 Connection pool 기능을 제공 // DBCP는 JNDI을 이용
+			 */			
+			
+			/*
+			 * // Connection con = DriverManager.getConnection(jdbcUrl,id,pw); Connection
+			 * con = common.DBTemplate.getConnection(); // 사용자가 많아져도 데이터베이스가 안힘들어함
+			 * 
+			 * System.out.println("연결 성공!!");
+			 */
+			
+			// 3. Statement 작성
+			String sql = "select btitle from book where btitle like ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1,"%" + keyword + "%");
+			
+			// 4. Query 실행
+			ResultSet rs = pstmt.executeQuery();
+			
+			// 5. 결과처리
+			while(rs.next()) {
+				list.add(rs.getString("btitle"));
+			}
+			
+			// 6. 사용한 resource 해제
+			rs.close();
+			pstmt.close();
+			/* con.close(); */			
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return list;
+	}
+
+	public List<BookVO> select(String keyword) {
+		
+		List<BookVO> list = new ArrayList<BookVO>();
+		try {
+			
+			String sql = "select bimgurl, btitle, bauthor, bprice from book where btitle like ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			
+			ResultSet rs = pstmt.executeQuery();
+		
+			while(rs.next()) {
+				// 각각의 책을 객체화 시켜서 ArrayList에 저장
+				BookVO temp = new BookVO();
+				temp.setBimgurl(rs.getString("bimgurl"));
+				temp.setBtitle(rs.getString("btitle"));
+				temp.setBauthor(rs.getString("bauthor"));
+				temp.setBprice(rs.getString("bprice"));
+				list.add(temp);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return list;
+	}
+	
+
+}
+```
 
 
 
