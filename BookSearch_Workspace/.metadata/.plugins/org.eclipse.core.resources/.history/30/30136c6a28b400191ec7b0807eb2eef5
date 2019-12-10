@@ -1,0 +1,17 @@
+package com.test.service;
+
+
+// Service 객체를 만들기 위한 class
+public class BookService {
+
+	// Business Logic(Transaction)에 대한 method만 나와요!
+	// 하나의 Transaction(기능)당 1개의 method가 이용.
+	public String[] getBooksTitle(String keyword) {
+		// 로직처리(더하기, 뺴기, for, if, etc...)
+		// 로직처리 코드가 많이 나와요!!!
+		// Database 처리가 나와야 해요!!
+		// DAO를 만들어서 database처리를 한 후 결과를 가져와요!!
+		return null;
+	}
+
+}

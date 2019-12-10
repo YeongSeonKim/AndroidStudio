@@ -1,0 +1,8 @@
+package com.test.dto;
+
+// VO, DTO라고 불리는 class
+// 데이터를 조직화해서 자장하는 용도
+
+public class BookVO {
+
+}

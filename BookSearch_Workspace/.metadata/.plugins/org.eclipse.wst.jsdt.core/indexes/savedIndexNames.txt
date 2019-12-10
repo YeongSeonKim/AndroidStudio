@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\BookSearch_Workspace\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3575485053.index
+3183288581.index
+1237828312.index
+19875283.index
+421229636.index
+3965998836.index

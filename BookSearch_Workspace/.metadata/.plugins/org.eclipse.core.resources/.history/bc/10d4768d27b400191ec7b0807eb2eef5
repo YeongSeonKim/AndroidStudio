@@ -1,0 +1,14 @@
+package com.test.service;
+
+
+// Service 객체를 만들기 위한 class
+public class BookService {
+
+	// Business Logic(Transaction)에 대한 method만 나와요!
+	// 하나의 Transaction(기능)당 1개의 method가 이용.
+	public String[] getBooksTitle(String keyword) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

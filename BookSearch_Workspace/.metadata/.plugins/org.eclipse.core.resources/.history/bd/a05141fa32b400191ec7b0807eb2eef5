@@ -1,0 +1,59 @@
+package com.test.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookDAO {
+
+	public List<String> selectTitle(String keyword) {
+		// keyword를 입력받아서 Database를 검색해서 
+		// String[]을 만들어서 return 해주는 DB처리
+		// JDBC를 이용한 DB처리
+	
+		// 결과가 저장될 list만들기
+		List<String> list = new ArrayList<String>();
+		
+		// 오류가 발생할 수 있으니 try-catch사용
+		try {
+	
+			// 1. Driver Loading
+			// MySQL을 위한 JDBC Driver class를 로딩
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("로딩 성공!!");
+			// 2. Connection 단계
+			String id = "android";
+			String pw = "android";
+			String jdbcUrl = "jdbc:mysql://localhost:3306/library?characterEncoding=UTF8";
+			
+			Connection con = DriverManager.getConnection(jdbcUrl,id,pw);
+			System.out.println("연결 성공!!");
+			
+			// 3. Statement 작성
+			String sql = "select btitle from books where btitle like ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1,"%" + keyword + "%");
+			
+			// 4. Query 실행
+			ResultSet rs = pstmt.executeQuery();
+			
+			// 5. 결과처리
+			while(rs.next()) {
+				list.add(rs.getString("btitle"));
+			}
+			
+			// 6. 사용한 resource 해제
+			rs.close();
+			pstmt.close();
+			con.close();			
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return list;
+	}
+
+}
